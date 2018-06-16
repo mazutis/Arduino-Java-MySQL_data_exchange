@@ -1,0 +1,9 @@
+//.....................................................
+15 Jun 2018, 21:48:22
+java.lang.NullPointerException
+	at SENSORS.RxTx.sendCommand(RXTX.java:96)
+	at SENSORS.CONTROLLER$1.run(Controller.java:46)
+15 Jun 2018, 21:48:27
+java.lang.NullPointerException
+	at SENSORS.RxTx.readPortBlocks(RXTX.java:80)
+	at SENSORS.CONTROLLER$3.run(Controller.java:119)
