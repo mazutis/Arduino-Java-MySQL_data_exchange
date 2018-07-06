@@ -17,7 +17,7 @@ public class View_About extends VBox{
 
     private void init(){
         //LABEL01
-        Label labelAbout01 = new Label("\nABOUT\n");
+        Label labelAbout01 = new Label("\n\nABOUT\n");
         labelAbout01.setFont(new Font("Arial", 12));
         labelAbout01.setStyle("-fx-font-weight: bold");
         labelAbout01.setAlignment(Pos.CENTER);

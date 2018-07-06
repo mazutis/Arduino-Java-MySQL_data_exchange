@@ -9,15 +9,16 @@ import org.w3c.dom.Element;
 import java.io.File;
 
 public class Xml {
-    static String domain;
-    static String ip;
-    static String url;
-    static String user;
-    static String password;
-    static String ssl;
+    private static String domain;
+    private static String ip;
+    private static String url;
+    private static String user;
+    private static String password;
+    private static String ssl;
+    private static String rxtxPort;
 
     // READ FROM Xml FILE...............................................................................................
-    Xml() {
+    public Xml() {
         try {
             File fXmlFile = new File("key.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -26,15 +27,11 @@ public class Xml {
 
             doc.getDocumentElement().normalize();
 
-            //String rootElement = doc.getDocumentElement().getNodeName();
-            //System.out.println(rootElement);                                                                          // test tracking
-
-            NodeList nList = doc.getElementsByTagName("mySQL");
+            NodeList nList = doc.getElementsByTagName("settings");
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node nNode = nList.item(temp);
 
-                //System.out.println("\nCurrent Element :" + nNode.getNodeName());                                      // test tracking
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
                     Element eElement = (Element) nNode;
@@ -45,6 +42,7 @@ public class Xml {
                     user = eElement.getElementsByTagName("user").item(0).getTextContent();
                     password = eElement.getElementsByTagName("password").item(0).getTextContent();
                     ssl = eElement.getElementsByTagName("ssl").item(0).getTextContent();
+                    rxtxPort = eElement.getElementsByTagName("rxtxPort").item(0).getTextContent();
 
                 }
             }
@@ -53,5 +51,30 @@ public class Xml {
         }
     }
     //..................................................................................................................
+    public String getDomain(){
+        return domain;
+    }
+
+    public static String getIP(){
+        return ip;
+    }
+
+    public static String getURL(){
+        return url;
+    }
+
+    public static String getUser(){
+        return user;
+    }
+
+    public static String getPassword(){
+        return password;
+    }
+
+    public static String getSSL(){
+        return ssl;
+    }
+
+    public static String getRxTxPort(){return rxtxPort; }
 
 }

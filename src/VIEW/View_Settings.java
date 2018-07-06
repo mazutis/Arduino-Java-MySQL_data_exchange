@@ -1,5 +1,6 @@
 package VIEW;
 
+import SENSORS.Xml;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class View_Settings extends VBox{
+    Xml xml = new Xml();
     private VBox root = new VBox();
 
     public View_Settings(){
@@ -29,16 +31,16 @@ public class View_Settings extends VBox{
         Label label05 = new Label("SSL: ");
 
         //..............................................................................................................DYNAMIC ELEMENTS
-        TextField textField01 = new TextField();
+        TextField textField01 = new TextField(Xml.getURL());
             textField01.setMinWidth(220);
 
-        TextField textField02 = new TextField();
+        TextField textField02 = new TextField(Xml.getUser());
             textField02.setMinWidth(220);
 
-        TextField textField03 = new TextField();
+        TextField textField03 = new TextField(Xml.getPassword());
             textField03.setMinWidth(220);
 
-        TextField textField04 = new TextField();
+        TextField textField04 = new TextField(Xml.getSSL());
             textField04.setMinWidth(220);
 
         Button btn01 = new Button("Test connection..");
@@ -77,14 +79,15 @@ public class View_Settings extends VBox{
             hbox02.getChildren().addAll(vbox02, vbox03);
 
         HBox hbox03 = new HBox();
-            hbox03.setPadding(new Insets(20,0,0,0));
+            hbox03.setPadding(new Insets(20,0,20,0));
             hbox03.setSpacing(10);
             hbox03.setAlignment(Pos.CENTER);
             hbox03.getChildren().add(btn01);
             hbox03.getChildren().add(btn02);
 
-        //...............................................
-
-        root.getChildren().addAll(hbox01, hbox02, hbox03);
+        //..............................................................................................................
+        root.getChildren().add(hbox01);
+        root.getChildren().add(hbox02);
+        root.getChildren().add(hbox03);
     }
 }

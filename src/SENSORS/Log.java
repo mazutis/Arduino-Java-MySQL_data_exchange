@@ -25,10 +25,29 @@ public class Log {
         }
     }
 
+    public Log(String message){
+        this(getTime(), message);
+    }
+
+    public Log(String time, String message){
+        try{
+            FileOutputStream fos = new FileOutputStream(new File("log.txt"), true);
+
+            PrintStream ps = new PrintStream(fos);
+            ps.println(time);
+            ps.println(message);
+            fos.flush();
+            fos.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static String getTime(){
         LocalDateTime localDateTime = LocalDateTime.now();
         DateTimeFormatter shortM = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
         String dateTime = shortM.format(localDateTime);
         return dateTime;
     }
+
 }

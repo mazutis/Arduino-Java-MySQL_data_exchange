@@ -3,20 +3,23 @@ package SENSORS;
 import com.fazecast.jSerialComm.SerialPort;
 
 public class CONTROLLER {
-    private MySQLQueries query = new MySQLQueries();
-    private StringToVariables strToVar = new StringToVariables();
+    private static  MySQLQueries query;
+    public static volatile boolean running = true; //for Thread control:
+
+    private static StringToVariables strToVar = new StringToVariables();
+    private static Xml xml = new Xml();
     private static RxTx rxtx = new RxTx();
-    private static SerialPort userPort = SerialPort.getCommPort("COM5");                                    //<settings>
+    private static SerialPort userPort = SerialPort.getCommPort(xml.getRxTxPort());                                    //<settings>
     private static int readingsInterval = 600_000; //time[ms] interval to send sensors readings to MySQL    //<settings>
     private static int positionsInterval =001_000; //time[ms] interval to send positions to ARDUINO         //<settings>
     private static int blocksToRead = 200; // blocks size to read received from arduino via RxTx port       //<settings>
 
-    private double temp1  = -999;
-    private double temp2  = -999;
-    private double hum1   = -999;
-    private double hum2   = -999;
-    private double sonic1 = -999;
-    private double sonic2 = -999;
+    private static double temp1  = -999;
+    private static double temp2  = -999;
+    private static double hum1   = -999;
+    private static double hum2   = -999;
+    private static double sonic1 = -999;
+    private static double sonic2 = -999;
     static String led01   = "OFF";
     static String led02   = "OFF";
     static String led03   = "OFF";
@@ -29,17 +32,51 @@ public class CONTROLLER {
     static String servo360Duration1 = "0300";  // Milliseconds
     static String servo360Duration2 = "0300";  // Milliseconds
 
-
     // MAIN.............................................................................................................
     public static void main(String [] args){
-        CONTROLLER controller = new CONTROLLER();
-        rxtx.connectToPort(userPort);
-        controller.setupArduino.start(); // Thread 0 start
+        connectAndStart.start();
         }
 
+    static Thread connectAndStart = new Thread(){
+        boolean tryToConnect = true;
+        public void run(){
+            try{
+                while(tryToConnect){
+                    if (rxtx.connectToPort(userPort)){
+                        if (MySQLConnection.testConnection()){
+                            query = new MySQLQueries();
+                            setupArduino.start();
+                            tryToConnect = false;
+                        }else{
+                            System.out.println("No MySQL connection.");
+                            for (int i=10; i>=0; i--){ //reconnecting after i seconds
+                                System.out.print("\rreconnecting in " + i + "s");
+                                sleep(1000);
+                            }
+                            System.out.println("\r");
+                            new Log("No MySQL connection. Reconnecting...");
+                        }
+                    }else{
+                        System.out.println("No RxTX connection");
+                        for (int i=10; i>=0; i--){ //reconnecting after i seconds
+                           System.out.print("\rreconnecting in " + i + "s");
+                           sleep(1000);
+                       }
+                       System.out.println("\r");
+                       new Log("No RxTx connection. Reconnecting...");
+                    }
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                new Log(e);
+            }
 
-    // SETUP AND START infinite xDataEchange Threads....................................................................
-    Thread setupArduino = new Thread() {
+        }
+    };
+
+
+    //SETUP AND START infinite xDataEchange Threads....................................................................
+    static Thread setupArduino = new Thread() {
         public void run() {
             try {
                 sleep(5000);//safetyDelayTime to initialize RxTx connection
@@ -52,15 +89,16 @@ public class CONTROLLER {
             } catch (Exception e) {
                 e.printStackTrace();
                 new Log(e);
+
             }
         }
     };
 
 
     // EXCHANGE DATA read MySQL send to RxTx............................................................................
-    Thread positionsDataExchange = new Thread(){
+    static Thread positionsDataExchange = new Thread(){
         public void run() {
-            for (; ; ) {
+            while (running) {
                 try {
                     System.out.println("Thread 1 starting..");                                                          // test tracking
 
@@ -103,17 +141,19 @@ public class CONTROLLER {
                 } catch (Exception e) {
                     e.printStackTrace();
                     new Log(e);
+                    running = false;
+                    terminateThreads();
                 }
-            }
+            }connectAndStart.start();
         }
     };
 
     // EXCHANGE DATA read RxTx send to MySQL............................................................................
-    Thread readingsDataExchange = new Thread(){
+    static Thread readingsDataExchange = new Thread(){
         public void run(){
-            for (; ; ) {
+            while (running) {
                 try {
-                    System.out.println("Thread 2 starting..");                                                          // test tracking
+                    System.out.println("Thread 2 starting.. ");                                                          // test tracking
 
                 //read data from RxTx
                 String serialPortString = rxtx.readPortBlocks(userPort, blocksToRead);
@@ -137,9 +177,17 @@ public class CONTROLLER {
                 } catch (Exception e) {
                     e.printStackTrace();
                     new Log(e);
+                    running = false;
+                    terminateThreads();
                 }
             }
         }
     };
+
+
+    public static void terminateThreads(){
+        running =false;
+        connectAndStart.start();
+    }
     //..................................................................................................................
 }

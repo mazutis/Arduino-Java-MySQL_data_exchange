@@ -10,20 +10,19 @@ import java.sql.SQLException;
   */
 
 public class MySQLConnection{
-
+    private final static Xml xml = new Xml();
     /** Connection to database info stored in key.xml file     */
     private static Connection conn;
-            static String url  = Xml.url;           // "mysql://xxxxxx.com:3306/xxxxx";
-    private static String user = Xml.user;          // "user_name";
-    private static String pass = Xml.password;      // "password";
-    private static String SSL  = Xml.ssl;           // "true";
+    private final static String url  = xml.getURL();
+    private final static String user = xml.getUser();
+    private final static String pass = xml.getPassword();
+    private final static String SSL  = xml.getSSL();
 
     private static String fullURL = "jdbc:" + url + "?useSSL="+SSL +"&serverTimezone=UTC";
     // Template: jdbc:mysql://localhost/db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 
-    // .................................................................................................................
+    //CONNECT to MySQL..................................................................................................
     public static Connection connect() throws SQLException{
-        //System.out.println("Connecting to " + url);                                                                   // test tracking
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
         }catch(ClassNotFoundException cnfe){
@@ -32,6 +31,18 @@ public class MySQLConnection{
         }
         conn = DriverManager.getConnection(fullURL,user,pass);
         return conn;
+    }
+
+    //TEST MySQL CONNECTION.............................................................................................
+    public static boolean testConnection(){
+        boolean connected = false;
+        try {
+            DriverManager.getConnection(fullURL, user, pass);
+            connected = true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return connected;
     }
     //..................................................................................................................
 

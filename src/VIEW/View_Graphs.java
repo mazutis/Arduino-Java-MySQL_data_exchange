@@ -22,7 +22,6 @@ public class View_Graphs extends VBox {
 
         //CHOICE BOX....................................................................................................
         ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList("Sensor 1 ", "Sensor 2 "));
-            choiceBox.setMinWidth(100);
 
         VBox vbox01 = new VBox();
             vbox01.setPadding(new Insets(5,0,0,5));
@@ -40,7 +39,7 @@ public class View_Graphs extends VBox {
             chartTemp.setTitle("Temperature ");
 
         XYChart.Series seriesTemp = new XYChart.Series();
-            seriesTemp.setName("seriesTemp");
+            seriesTemp.setName("°C ");
 
         /**TEST ***********************/
         seriesTemp.getData().add(new XYChart.Data(1,22));
@@ -54,7 +53,7 @@ public class View_Graphs extends VBox {
 
         //CHART HUMIDITY................................................................................................
         final NumberAxis xAxis02 = new NumberAxis();
-            //xAxis02.setLabel("Time ");
+        //            //xAxis02.setLabel("Time ");
 
         final NumberAxis yAxis02 = new NumberAxis();
             //yAxis02.setLabel("Rh ");
@@ -64,7 +63,7 @@ public class View_Graphs extends VBox {
             chartHum.setTitle("Humidity ");
 
         XYChart.Series seriesHum = new XYChart.Series();
-            seriesHum.setName("seriesHumidity");
+            seriesHum.setName("Rh");
 
         /**TEST ***********************/
         seriesHum.getData().add(new XYChart.Data(1,62));

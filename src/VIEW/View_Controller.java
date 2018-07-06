@@ -1,10 +1,10 @@
 package VIEW;
 
-import SENSORS.VIEW;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -173,7 +173,7 @@ public class View_Controller extends VBox {
 
         ToggleSwitch btnLED03 = new ToggleSwitch();
 
-        //..............................................................................................................
+        //..............................................................................................................//..............
 
 
         //IMAGES.....................................................................
@@ -218,20 +218,21 @@ public class View_Controller extends VBox {
 
 
             //subVBOX goes into HBOX09 HBOX10
+            //subLED
             VBox subVbox01 = new VBox();
             subVbox01.setPadding(new Insets(0,20,0,20));
             subVbox01.setSpacing(10);
             subVbox01.setAlignment(Pos.CENTER);
             subVbox01.getChildren().add(labelLED01);
             subVbox01.getChildren().add(btnLED01);
-
+            //
             VBox subVbox02 = new VBox();
             subVbox02.setPadding(new Insets(0,20,0,20));
             subVbox02.setSpacing(10);
             subVbox02.setAlignment(Pos.CENTER);
             subVbox02.getChildren().add(labelLED02);
             subVbox02.getChildren().add(btnLED02);
-
+            //
             VBox subVbox03 = new VBox();
             subVbox03.setPadding(new Insets(0,20,0,20));
             subVbox03.setSpacing(10);
@@ -239,6 +240,7 @@ public class View_Controller extends VBox {
             subVbox03.getChildren().add(labelLED03);
             subVbox03.getChildren().add(btnLED03);
 
+            //subSERVO1
             VBox subVbox04 = new VBox();
             subVbox04.setPrefWidth(170);
             subVbox04.setAlignment(Pos.CENTER);
@@ -248,6 +250,7 @@ public class View_Controller extends VBox {
             subVbox04.getChildren().add(subHbox1);
             subVbox04.getChildren().add(btnServo1);
 
+            //subSERVO2
             VBox subVbox05 = new VBox();
             subVbox05.setPrefWidth(170);
             subVbox05.setAlignment(Pos.CENTER);
@@ -259,70 +262,79 @@ public class View_Controller extends VBox {
 
 
         //HBOX goes to vbox.............................................................................................
+        //Sensor 1
         HBox hbox01 = new HBox();
         hbox01.setPadding(new Insets(15,0,0,5));
         hbox01.setAlignment(Pos.CENTER);
         hbox01.getChildren().addAll(labelSensor1);
-
+        //
         HBox hbox02 = new HBox();
         hbox02.setPadding(new Insets(0,0,0,5));
         hbox02.setAlignment(Pos.CENTER);
         hbox02.getChildren().addAll(labelTemp1, labelC1, labelHum1, labelRH1);
 
+        //Sensor2
         HBox hbox03 = new HBox();
         hbox03.setPadding(new Insets(10,0,0,5));
         hbox03.setAlignment(Pos.CENTER);
         hbox03.getChildren().addAll(labelSensor2);
-
+        //
         HBox hbox04 = new HBox();
         hbox04.setPadding(new Insets(0,0,0,5));
         hbox04.setAlignment(Pos.CENTER);
         hbox04.getChildren().addAll(labelTemp2, labelC2, labelHum2, labelRH2);
 
+        //Ultrasonic 1
         HBox hbox05 = new HBox();
         hbox05.setPadding(new Insets(10,0,0,5));
         hbox05.setAlignment(Pos.CENTER);
         hbox05.getChildren().addAll(labelUltrasonic1);
-
+        //
         HBox hbox06 = new HBox();
         hbox06.setPadding(new Insets(0,0,0,5));
         hbox06.setAlignment(Pos.CENTER);
         hbox06.getChildren().addAll(labelSonic1, labelCm1);
 
+        //Ultrasonic 2
         HBox hbox07 =  new HBox();
         hbox07.setPadding(new Insets(10,0,0,5));
         hbox07.setAlignment(Pos.CENTER);
         hbox07.getChildren().addAll(labelUltrasonic2);
-
+        //
         HBox hbox08 = new HBox();
-        hbox08.setPadding(new Insets(0,0,0,5));
+        hbox08.setPadding(new Insets(0,0,30,5));
         hbox08.setAlignment(Pos.CENTER);
         hbox08.getChildren().addAll(labelSonic2, labelCm2);
 
+        //LED HBOX
         HBox hbox09 = new HBox();
-        hbox09.setPadding(new Insets(70,0,0,5));
+        hbox09.setPadding(new Insets(20,0,30,5));
         hbox09.setAlignment(Pos.CENTER);
         hbox09.getChildren().add(subVbox01);
         hbox09.getChildren().add(subVbox02);
         hbox09.getChildren().add(subVbox03);
 
+        //SERVO HBOX
         HBox hbox10 = new HBox();
-        hbox10.setPadding(new Insets(40,0,0,0));
+        hbox10.setPadding(new Insets(20,0,10,0));
         hbox10.setAlignment(Pos.CENTER);
         hbox10.getChildren().add(subVbox04);
         hbox10.getChildren().add(subVbox05);
 
         //VBOX goes to VIEW.borderPane..................................................................................
-        getChildren().add(hbox01);
-        getChildren().add(hbox02);
-        getChildren().add(hbox03);
-        getChildren().add(hbox04);
-        getChildren().add(hbox05);
-        getChildren().add(hbox06);
-        getChildren().add(hbox07);
-        getChildren().add(hbox08);
-        getChildren().add(hbox09);
-        getChildren().add(hbox10);
+        getChildren().add(hbox01);  //sensor 1
+        getChildren().add(hbox02);  //sensor 1
+        getChildren().add(hbox03);  //sensor 2
+        getChildren().add(hbox04);  //sensor 2
+        getChildren().add(hbox05);  //ultrasonic 1
+        getChildren().add(hbox06);  //ultrasonic 1
+        getChildren().add(hbox07);  //ultrasonic 2
+        getChildren().add(hbox08);  //ultrasonic 2
+        getChildren().add(new Separator());
+        getChildren().add(hbox09);  //LED
+        getChildren().add(new Separator());
+        getChildren().add(hbox10);  //servo
+        getChildren().add(new Separator());
     }
 
 }

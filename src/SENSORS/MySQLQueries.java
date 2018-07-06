@@ -16,16 +16,17 @@ import java.sql.Statement;
 
 public class MySQLQueries {
     MySQLConnection connection = new MySQLConnection();
+
     Connection con;
     Statement st;
     ResultSet rs;
 
-    // INITIALIZE CONNECTION............................................................................................
+    //INITIALIZE CONNECTION.............................................................................................
     MySQLQueries(){
         try{
             con = connection.connect();
             st = con.createStatement();
-            System.out.println("Connected to " + connection.url);
+            System.out.println("Connected to " + Xml.getURL());
         }catch (Exception e){
             e.printStackTrace();
             new Log(e);
@@ -34,7 +35,7 @@ public class MySQLQueries {
 
 
 
-    // READ FROM SQL table: positions...................................................................................
+    //READ FROM SQL table: positions....................................................................................
     public void getPositions(){
         try {
             rs = st.executeQuery("SELECT * FROM positions WHERE ID = 1");

@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-/** Main VIEW object.*/
+/** Main VIEW object. */
 
 public class VIEW extends Application {
     private BorderPane root = new BorderPane();//Main window

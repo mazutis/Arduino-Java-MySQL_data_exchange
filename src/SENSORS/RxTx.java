@@ -36,14 +36,16 @@ public class RxTx {
 
 
     //CONNECT TO SELECTED PORT..........................................................................................
-    public void connectToPort(SerialPort userPort){
+    public boolean connectToPort(SerialPort userPort){
+        boolean connectedToPort = false;
         userPort.openPort();
         if (userPort.isOpen()) {
+            connectedToPort = true;
             System.out.println("Connected to: " + userPort.getSystemPortName());
         } else {
             System.out.println("Port not available");
-            return;
         }
+        return connectedToPort;
     }
 
 
@@ -89,7 +91,7 @@ public class RxTx {
     }
 
     //WRITE TO PORT.....................................................................................................
-    public static void sendCommand(SerialPort userPort, String command){
+    public static void sendCommand (SerialPort userPort, String command){
         try
         {
             OutputStream stream = userPort.getOutputStream();
@@ -111,8 +113,7 @@ public class RxTx {
     //..................................................................................................................
     //WRITE TO PORT <including safetyDelayTime, to ensure, that arduino code has been initialized for the first run>....
     public void sendCommandSafeMode(SerialPort userPort, String command){
-
-        Thread sendCommandSafeMode = new Thread() {
+        Thread sendCommandSafeMode = new Thread(){
             public void run() {
                 try
                 {
@@ -130,7 +131,6 @@ public class RxTx {
                 {
                     e.printStackTrace();
                     new Log(e);
-
                 }
             }
         };
