@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <KEY>
-<mySQL id="1">
-	<domain>www.xxxx.com</domain>
-	<ip>000.000.00.000</ip>
-	<url>mysql://xxx.com:3306/xxxx_xxxxx</url>
+<settings id="1">
+	<domain>www.0000000.com</domain>
+	<ip>000.000.000.000</ip>
+	<url>mysql://url.com:3306/table</url>
 	<user>user_name</user>
 	<password>password</password>
 	<ssl>true</ssl>
-</mySQL>
+	<rxtxPort>COM5</rxtxPort>
+</settings>
 </KEY>
