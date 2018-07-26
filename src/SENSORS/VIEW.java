@@ -2,6 +2,7 @@ package SENSORS;
 
 import VIEW.*;
 import javafx.application.Application;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,6 +13,8 @@ import javafx.stage.Stage;
 /** Main VIEW object. */
 
 public class VIEW extends Application {
+    public static CONTROLLER controller = new CONTROLLER();
+
     private BorderPane root = new BorderPane();//Main window
 
     private View_Controller view_controller = new View_Controller();
@@ -66,7 +69,6 @@ public class VIEW extends Application {
         root.setCenter(view_controller);
 
 
-
         //SCENE.........................................................................................................
         Scene scene = new Scene(root, 350, 600);
 
@@ -76,8 +78,13 @@ public class VIEW extends Application {
         stage.getIcons().add(new Image("IMAGES/icon.png")); // src/IMAGES/icon.png
         stage.setMinWidth(350);
         stage.setMinHeight(600);
+
         stage.setScene(scene);
         stage.show();
     }
+
+
+
+
 
 }

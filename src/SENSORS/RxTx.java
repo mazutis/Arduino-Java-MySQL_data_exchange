@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class RxTx {
-    static String serialPortString;
+    private static String serialPortString;
 
 
     //LIST<Sting> OF AVAILABLE PORTS....................................................................................
@@ -36,21 +36,21 @@ public class RxTx {
 
 
     //CONNECT TO SELECTED PORT..........................................................................................
-    public boolean connectToPort(SerialPort userPort){
+    boolean connectToPort(SerialPort userPort){
         boolean connectedToPort = false;
         userPort.openPort();
         if (userPort.isOpen()) {
             connectedToPort = true;
             System.out.println("Connected to: " + userPort.getSystemPortName());
         } else {
-            System.out.println("Port not available");
+            //System.out.println("Port not available");
         }
         return connectedToPort;
     }
 
 
     //READ DATA FROM PORT CONTINUOUSLY..................................................................................
-    public String readPortContinuously(SerialPort userPort) {
+    String readPortContinuously(SerialPort userPort) {
         userPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() {
@@ -72,7 +72,7 @@ public class RxTx {
 
 
     //READ n BLOCKS OF DATA FROM PORT...................................................................................
-    public String readPortBlocks(SerialPort userPort, int blocksToRead){
+    String readPortBlocks(SerialPort userPort, int blocksToRead){
         String readBlocks = "";
         userPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 0, 0);
         InputStream in = userPort.getInputStream();
@@ -82,7 +82,7 @@ public class RxTx {
                 readBlocks = readBlocks + ((char)in.read());
             }
             in.close();
-            System.out.println("Data received from " + userPort.getSystemPortName() + " port.");
+            System.out.println("Data from " + userPort.getSystemPortName() + " port:");
         } catch (Exception e) {
             e.printStackTrace();
             new Log(e);
@@ -91,28 +91,19 @@ public class RxTx {
     }
 
     //WRITE TO PORT.....................................................................................................
-    public static void sendCommand (SerialPort userPort, String command){
-        try
+    static void sendCommand (SerialPort userPort, String command) throws Exception{
+        //try
         {
             OutputStream stream = userPort.getOutputStream();
             stream.write(command.getBytes()); // Write to serial
             stream.flush();
             System.out.println("Command to port "+userPort.getSystemPortName()+ " sent: "+command+" "+command.getBytes()); // TEST TRACK
         }
-        catch (java.io.IOException IOexception){
-            System.out.println("RxTx connection lost..");
-            new Log(IOexception);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            new Log(e);
-        }
 
     }
     //..................................................................................................................
     //WRITE TO PORT <including safetyDelayTime, to ensure, that arduino code has been initialized for the first run>....
-    public void sendCommandSafeMode(SerialPort userPort, String command){
+    void sendCommandSafeMode(SerialPort userPort, String command){
         Thread sendCommandSafeMode = new Thread(){
             public void run() {
                 try
@@ -139,7 +130,7 @@ public class RxTx {
 
 
     //DISCONNECT FROM SELECTED PORT.....................................................................................
-    public void closePort(SerialPort userPort){
+    void closePort(SerialPort userPort){
         userPort.closePort();
     }
 

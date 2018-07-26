@@ -22,7 +22,7 @@ public class MySQLConnection{
     // Template: jdbc:mysql://localhost/db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 
     //CONNECT to MySQL..................................................................................................
-    public static Connection connect() throws SQLException{
+    static Connection connect() throws SQLException{
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
         }catch(ClassNotFoundException cnfe){
@@ -34,13 +34,14 @@ public class MySQLConnection{
     }
 
     //TEST MySQL CONNECTION.............................................................................................
-    public static boolean testConnection(){
+    static boolean testConnection(){
         boolean connected = false;
         try {
             DriverManager.getConnection(fullURL, user, pass);
             connected = true;
         }catch(Exception e){
             e.printStackTrace();
+            new Log(e);
         }
         return connected;
     }

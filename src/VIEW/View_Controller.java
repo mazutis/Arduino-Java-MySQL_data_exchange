@@ -1,18 +1,18 @@
 package VIEW;
 
+import SENSORS.CONTROLLER;
+import SENSORS.Log;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-/** Goes To SENSORS.VIEW
+/** View_Controller goes To SENSORS.VIEW
  * *                                    VBox vbox 🡪     HBox01,.... HBox09, HBox10
  *                                                      🡫           🡫
  *                                                      labels      subVBoxes
@@ -21,9 +21,18 @@ import javafx.scene.text.Font;
  */
 
 public class View_Controller extends VBox {
-    public View_Controller(){
+    private Label labelTemp1 = new Label();
+    private Label labelTemp2 = new Label();
+    private Label labelHum1 = new Label();
+    private Label labelHum2 = new Label();
+    private Label labelSonic1 = new Label();
+    private Label labelSonic2 = new Label();
+    private ToggleButton btnLED01 = new ToggleButton("OFF");
+    private ToggleButton btnLED02 = new ToggleButton("OFF");
+    private ToggleButton btnLED03 = new ToggleButton("OFF");
 
-        //LABELS (Static)............................................................
+    public View_Controller(){
+        //STATIC LABELS ................................................................................................
         Label labelSensor1 = new Label("Sensor 1:   ");
         labelSensor1.setFont(new Font("Arial", 12));
 
@@ -108,29 +117,24 @@ public class View_Controller extends VBox {
         Label labelSpeed2 = new Label(" Speed 2,");
         labelSpeed2.setFont(new Font("Arial", 8));
 
+
         //..............................................................................................................
-        //LABELS & TEXTFIELDS (Dynamic).................................................................................//DYNAMIC ELEMENTS
-        Label labelTemp1 = new Label("-999");
+        //DYNAMIC LABELS & TEXTFIELDS ..................................................................................//DYNAMIC ELEMENTS
         labelTemp1.setFont(new Font("Arial", 16));
         labelTemp1.setStyle("-fx-font-weight: bold");
 
-        Label labelTemp2 = new Label("-999");
         labelTemp2.setFont(new Font("Arial", 16));
         labelTemp2.setStyle("-fx-font-weight: bold");
 
-        Label labelHum1 = new Label("   -999");
         labelHum1.setFont(new Font("Arial", 16));
         labelHum1.setStyle("-fx-font-weight: bold");
 
-        Label labelHum2 = new Label("   -999");
         labelHum2.setFont(new Font("Arial", 16));
         labelHum2.setStyle("-fx-font-weight: bold");
 
-        Label labelSonic1 = new Label("-999");
         labelSonic1.setFont(new Font("Arial", 16));
         labelSonic1.setStyle("-fx-font-weight: bold");
 
-        Label labelSonic2 = new Label("-999");
         labelSonic2.setFont(new Font("Arial", 16));
         labelSonic2.setStyle("-fx-font-weight: bold");
 
@@ -167,11 +171,45 @@ public class View_Controller extends VBox {
         btnServo2.setMinWidth(168);
 
 
-        ToggleSwitch btnLED01 = new ToggleSwitch();
+        btnLED01.setMinWidth(75);
+        btnLED01.setOnAction(e->{
+            if (btnLED01.isSelected()){
+                toggleButtonOn(btnLED01);
+                CONTROLLER.setLED01("ON");
+                CONTROLLER.setMySqlLed01("ON");
 
-        ToggleSwitch btnLED02 = new ToggleSwitch();
+            }else {
+                toggleButtonOff(btnLED01);
+                CONTROLLER.setLED01("OFF");
+                CONTROLLER.setMySqlLed01("OFF");
+            }
+        });
 
-        ToggleSwitch btnLED03 = new ToggleSwitch();
+        btnLED02.setMinWidth(75);
+        btnLED02.setOnAction(e->{
+            if (btnLED02.isSelected()){
+                toggleButtonOn(btnLED02);
+                CONTROLLER.setLED02("ON");
+                CONTROLLER.setMySqlLed02("ON");
+            }else {
+                toggleButtonOff(btnLED02);
+                CONTROLLER.setLED02("OFF");
+                CONTROLLER.setMySqlLed02("OFF");
+            }
+        });
+
+        btnLED03.setMinWidth(75);
+        btnLED03.setOnAction(e->{
+            if (btnLED03.isSelected()){
+                toggleButtonOn(btnLED03);
+                CONTROLLER.setLED03("ON");
+                CONTROLLER.setMySqlLed03("ON");
+            }else {
+                toggleButtonOff(btnLED03);
+                CONTROLLER.setLED03("OFF");
+                CONTROLLER.setMySqlLed03("OFF");
+            }
+        });
 
         //..............................................................................................................//..............
 
@@ -335,6 +373,82 @@ public class View_Controller extends VBox {
         getChildren().add(new Separator());
         getChildren().add(hbox10);  //servo
         getChildren().add(new Separator());
+
+
+        dataExchange.start();
+    }
+
+
+//Data exchange with CONTROLLER, update UI constantly ........................................................................................
+    //public static Thread dataExchange = new Thread(new Runnable(){
+    private Thread dataExchange = new Thread(new Runnable(){
+
+        @Override
+        public void run(){
+
+        Runnable update = new Runnable(){
+            @Override
+            public void run(){
+                updateLabels();
+                updateLedButtons();
+            }
+        };
+
+            while(true){
+                try{
+                    //Thread.sleep(1000);
+                    dataExchange.sleep(1000);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    new Log(e);
+                }
+                Platform.runLater(update);
+            }
+        }
+
+    });
+
+    private void updateLabels(){
+        labelTemp1.setText(CONTROLLER.getTemp1());
+        labelTemp2.setText(CONTROLLER.getTemp2());
+        labelHum1.setText(CONTROLLER.getHum1());
+        labelHum2.setText(CONTROLLER.getHum2());
+        labelSonic1.setText(CONTROLLER.getSonic1());
+        labelSonic2.setText(CONTROLLER.getSonic2());
+    }
+
+    private void updateLedButtons(){
+        if(!CONTROLLER.getMySqlPending()){ //wait till pending settings will be send
+            if(CONTROLLER.getLED01().equals("ON")){
+                toggleButtonOn(btnLED01);
+            }else {
+                toggleButtonOff(btnLED01);
+            }
+
+            if(CONTROLLER.getLED02().equals("ON")){
+                toggleButtonOn(btnLED02);
+            }else {
+                toggleButtonOff(btnLED02);
+            }
+
+            if(CONTROLLER.getLED03().equals("ON")){
+                toggleButtonOn(btnLED03);
+            }else {
+                toggleButtonOff(btnLED03);
+            }
+        }
+    }
+
+
+    private void toggleButtonOn(ToggleButton btn){
+        btn.setText("ON");
+        btn.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
+        btn.setSelected(true);
+    }
+    private void toggleButtonOff(ToggleButton btn){
+        btn.setText("OFF");
+        btn.setStyle("");
+        btn.setSelected(false);
     }
 
 }
